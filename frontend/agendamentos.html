@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamentos - HM01</title>
+
+    <link rel="shortcut icon" href="assets/img/favicon/hm01.ico" type="image/x-icon">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="row bg-primary text-light text-start" style="height: 22px;">
+        <h6 style="margin-left: 10px;">Versão ALPHA</h6>
+    </div>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="index.html">HM01</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="agendamentos.html">Agendamento</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Cadastrar
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="clientes.html">Cliente</a></li>
+                      <li><a class="dropdown-item" href="funcionarios.html">Funcionário</a></li>
+                      <li><a class="dropdown-item" href="servicos.html">Serviço</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+        </nav>
+    </header>
+
+    <section>
+        <div class="container mt-4">
+            <div class="mb-4">
+                <h3>Gerenciar agendamentos</h3>
+            </div>
+            <div class="row mb-4">
+                <div class="card shadow">
+                    <form id="cadastrar" class="p-4" type="submit">
+                        <div class="mb-2">
+                            <label for="data" class="form-label">Data</label>
+                            <input id="data" class="form-control" type="date" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="selectHoras" class="form-label">Hora</label>
+                            <select id="selectHoras" class="form-select"></select>
+                        </div>
+                        <div class="mb-2">
+                            <label for="selectFuncionarios" class="form-label">Funcionário</label>
+                            <select id="selectFuncionarios" class="form-select"></select>
+                        </div>
+                        <div class="mb-2">
+                            <label for="selectClientes" class="form-label">Cliente</label>
+                            <select id="selectClientes" class="form-select"></select>   
+                        </div>
+                        <div class="mb-4">
+                            <label for="selectServicos" class="form-label">Serviço</label>
+                            <select id="selectServicos" class="form-select"></select>
+                        </div>
+                        <div class="text-end">
+                            <button id="enviar" class="btn btn-primary">Enviar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive">
+                        <thead>
+                            <th>Data</th>
+                            <th>Hora</th>
+                            <th>Barbeiro</th>
+                            <th>Cliente</th>
+                            <th>Serviço</th>
+                            <th>Realizado</th>
+                            <th>Pago</th>
+                            <th></th>
+                        </thead>
+                        <tbody id="tableAgendamentos">
+    
+                        </tbody>
+                        <tfoot>
+                            <th>Data</th>
+                            <th>Hora</th>
+                            <th>Barbeiro</th>
+                            <th>Cliente</th>
+                            <th>Serviço</th>
+                            <th>Realizado</th>
+                            <th>Pago</th>
+                            <th></th>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center">
+        <hr>
+        <p>&copy; Wendell Bernardo</p>
+    </footer>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="assets/js/scriptsagendamentos.js"></script>
+<!-- <script type="module" src="./assets/js/scriptsagendamentos.js"></script> -->
+<!-- modules funcionam somente em um servidor WEB via requisição HTTP -->
+</html>

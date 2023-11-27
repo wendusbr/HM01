@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços - HM01</title>
+
+    <link rel="shortcut icon" href="assets/img/favicon/hm01.ico" type="image/x-icon">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="row bg-primary text-light text-start" style="height: 22px;">
+        <h6 style="margin-left: 10px;">Versão ALPHA</h6>
+    </div>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="index.html">HM01</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="agendamentos.html">Agendamento</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Cadastrar
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="clientes.html">Cliente</a></li>
+                      <li><a class="dropdown-item" href="funcionarios.html">Funcionário</a></li>
+                      <li><a class="dropdown-item" href="servicos.html">Serviço</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+        </nav>
+    </header>
+
+    <section>
+        <div class="container mt-4">
+            <div class="mb-4">
+                <h3>Gerenciar serviços</h3>
+            </div>
+            <div class="row mb-4">
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="nav-cadastrar-tab" data-bs-toggle="tab" data-bs-target="#nav-cadastrar" type="button" role="tab" aria-controls="nav-cadastrar" aria-selected="true">Novo</button>
+                    <button class="nav-link" id="nav-editar-tab" data-bs-toggle="tab" data-bs-target="#nav-editar" type="button" role="tab" aria-controls="nav-editar" aria-selected="false">Editar</button>
+                </div>
+                <div class="card shadow">
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-cadastrar" role="tabpanel" aria-labelledby="nav-cadastrar-tab" tabindex="0">
+                            <form id="cadastrar" class="p-4" type="submit">
+                                <div class="mb-2">
+                                    <label for="nome" class="form-label">Nome</label>
+                                    <input id="nome" class="form-control" type="text" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="descricao" class="form-label">Descrição</label>
+                                    <textarea id="descricao" class="form-control" type="text" style="min-height: 200px;"></textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="preco">Preço (R$)</label>
+                                    <input id="preco" class="form-control" type="number" step="0.01" required>
+                                </div>
+                                <div class="text-end">
+                                    <button id="enviar" class="btn btn-primary">Enviar</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="nav-editar" role="tabpanel" aria-labelledby="nav-editar-tab" tabindex="0">
+                            <form id="editar" class="p-4" type="submit">
+                                <div class="mb-2">
+                                    <label for="idServico" class="form-label">ID Serviço</label>
+                                    <input id="idServico" class="form-control" type="number" disabled required>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="editarNome" class="form-label">Nome</label>
+                                    <input id="editarNome" class="form-control" type="text" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="editarDescricao" class="form-label">Descrição</label>
+                                    <textarea id="editarDescricao" class="form-control" type="text" style="min-height: 200px;"></textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="editarPreco">Preço (R$)</label>
+                                    <input id="editarPreco" class="form-control" type="number" step="0.01" required>
+                                </div>
+                                <div class="text-end">
+                                    <button id="salvar" class="btn btn-success">Salvar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input id="filtroBusca" class="form-control" type="text" placeholder="Buscar...">
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <th hidden>#</th>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                            <th>Preço (R$)</th>
+                            <th></th>
+                            <th></th>
+                        </thead>
+                        <tbody id="tableServicos">
+                            
+                        </tbody>
+                        <tfoot>
+                            <th hidden>#</th>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                            <th>Preço (R$)</th>
+                            <th></th>
+                            <th></th>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center">
+        <hr>
+        <p>&copy; Wendell Bernardo</p>
+    </footer>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="assets/js/scriptsservicos.js"></script>
+
+</html>
