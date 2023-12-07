@@ -3,7 +3,7 @@ $("#editarTelefone").mask("(99) 99999-9999");
 
 function CarregarTabela(){
     document.getElementById('tableClientes').innerHTML = '';
-    setTimeout(GerarTabela, 10); // Tempo de 10ms para não sobrecarregar o servidor
+    setTimeout(GerarTabela, 100); // Tempo de 100ms para não sobrecarregar o servidor
 }
 
 function GerarTabela(){
@@ -20,13 +20,20 @@ function GerarTabela(){
 
             for(var i=0; i<dados.length; i++){
                 var row = `<tr id=${i}>`;
+
+                dados[i]['telefone'] === null ? dados[i]['telefone']='' : false;
+                dados[i]['email'] === null ? dados[i]['email']='' : false;
+
                 row += `
                     <td hidden>${dados[i]['idCliente']}</td>
                     <td>${dados[i]['nome']}</td>
                     <td>${dados[i]['telefone']}</td>
                     <td>${dados[i]['email']}</td>
-                    <td class="text-end"><button class="btn btn-outline-success" onclick="ColetaDadosLinha(${i})"><i class="bi bi-pencil-square"></i></td>
-                    <td class="text-end"><button class="btn btn-outline-danger" onclick="ExcluirTupla(${dados[i]['idCliente']})"><i class="bi bi-trash"></i></td>
+
+                    <td class="text-center">
+                        <a role="button" class="acao-editar" onclick="ColetaDadosLinha(${i})"><i class="bi bi-pencil-square"></i></a>
+                        <a role="button" class="acao-excluir" onclick="ExcluirTupla(${dados[i]['idCliente']})"><i class="bi bi-trash"></i></a>
+                    </td>
                 `;
                 row += '</tr>';
 
@@ -51,20 +58,14 @@ function ColetaDadosLinha(rowId){
         document.getElementById('editarTelefone').value = rowData[2];
         document.getElementById('editarEmail').value = rowData[3];
 
-        $('#nav-editar-tab').tab('show'); // Mostrar automaticamente na aba de Edição
+        $('#modalEditarCliente').modal('show');
     }
 }
 
 function ExcluirTupla(chave){
-    $.ajax({
-        url: '../app/api/endpoints/POST_deletecliente.php',
-        type: 'POST',
-        data: {
-            idCliente: chave
-        }
-    })
+    window.sessionStorage.setItem('chave', chave);
 
-    CarregarTabela();
+    $('#modalConfirmacao').modal('show');
 }
 
 $(document).ready(function(){
@@ -88,6 +89,10 @@ $('#cadastrar').on('submit', function(event){
         }
     })
 
+    $('#modalNovoCliente').modal('hide');
+    $('#nome').val('');
+    $('#telefone').val('');
+    $('#email').val('');
     CarregarTabela();
 })
 
@@ -110,7 +115,24 @@ $('#editar').on('submit', function(event){
         }
     })
 
+    $('#modalEditarCliente').modal('hide');
     CarregarTabela();
+})
+
+$('#excluir').on('click', function(event){
+    event.preventDefault();
+    const chave = window.sessionStorage.getItem('chave');
+
+    $.ajax({
+        url: '../app/api/endpoints/POST_deletecliente.php',
+        type: 'POST',
+        data: {
+            idCliente: chave
+        }
+    })
+
+    CarregarTabela();
+    $('#modalConfirmacao').modal('hide');
 })
 
 $("#filtroBusca").on("keyup", function () {
@@ -131,3 +153,9 @@ $("#filtroBusca").on("keyup", function () {
       $row.toggle(rowContainsValue);
     });
 });
+
+$('#novoCliente').on('click', function(event){
+    event.preventDefault();
+
+    $('#modalNovoCliente').modal('show');
+})

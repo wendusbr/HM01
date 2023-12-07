@@ -1,7 +1,7 @@
 <?php
     include('../../config.php');
 
-    $sql = "INSERT INTO agendamento(data, hora, cpf, idCliente, idServico) VALUES ('{$_POST['data']}', '{$_POST['hora']}', '{$_POST['cpf']}', {$_POST['idCliente']}, {$_POST['idServico']})";
+    $sql = "INSERT INTO agendamento(data, hora, idCliente, cpf, idServico) VALUES ('{$_POST['data']}', '{$_POST['hora']}', {$_POST['idCliente']}, '{$_POST['cpf']}', {$_POST['idServico']})";
 
     $result = $connection->query($sql);
 

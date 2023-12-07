@@ -1,0 +1,19 @@
+.acao-editar{
+    color: #198754;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.acao-editar:hover{
+    color: #21aa6a;
+}
+
+.acao-excluir{
+    color: #dc3545;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.acao-excluir:hover{
+    color: #ff3d50;
+}

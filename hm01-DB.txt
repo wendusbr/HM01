@@ -1,0 +1,128 @@
+CREATE DATABASE HM01;
+USE HM01;
+
+CREATE TABLE Cliente(
+	idCliente smallint(5) PRIMARY KEY AUTO_INCREMENT,
+	nome varchar(50) NOT NULL,
+	telefone char(16) NULL,
+	email varchar(100) NULL
+);
+
+CREATE TABLE Funcionario(
+	cpf char(14) PRIMARY KEY,
+	nome varchar(20) NOT NULL
+);
+
+CREATE TABLE Servico(
+	idServico smallint(2) PRIMARY KEY AUTO_INCREMENT,
+	nome varchar(20) NOT NULL,
+	descricao tinytext NULL,
+	preco decimal(5,2) NOT NULL
+);
+
+CREATE TABLE Agendamento(
+	data date NOT NULL,
+	hora time NOT NULL,
+	cpf char(14) NOT NULL,
+	idCliente smallint(5) NOT NULL,
+	idServico smallint(2) NOT NULL,
+	status boolean DEFAULT false,
+	pago boolean DEFAULT false,
+	PRIMARY KEY(data, hora, cpf),
+	FOREIGN KEY(cpf) REFERENCES Funcionario(cpf),
+	FOREIGN KEY(idCliente) REFERENCES Cliente(idCliente),
+	FOREIGN KEY(idServico) REFERENCES Servico(idServico)
+);
+
+CREATE VIEW agenda_dia AS
+SELECT A.hora AS 'Horario', C.nome AS 'Cliente', F.nome AS 'Barbeiro', S.nome AS 'Servico', S.preco AS 'Valor (R$)', A.pago
+FROM Agendamento AS A, Cliente AS C, Funcionario AS F, Servico AS S
+WHERE A.data=curdate() AND A.idCliente=C.idCliente AND A.cpf=F.cpf AND A.idServico=S.idServico
+ORDER BY A.hora
+;
+
+DELIMITER $$
+CREATE TRIGGER trg_statusAutomatico BEFORE UPDATE ON Agendamento 
+FOR EACH ROW
+BEGIN
+	IF NEW.pago<>OLD.pago AND NEW.pago=1 THEN
+		SET NEW.status = 1;
+	END IF;
+END $$
+
+CREATE TRIGGER trg_excecao BEFORE INSERT ON Agendamento
+FOR EACH ROW
+BEGIN
+	SET @check = (SELECT COUNT(*) FROM Agendamento WHERE data=NEW.data AND hora=NEW.hora AND idCliente=NEW.idCliente);
+	IF @check>0 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'Cliente não pode fazer dois serviços ao mesmo tempo.';
+	END IF;
+END $$
+
+CREATE TRIGGER trg_cascadeCliente BEFORE DELETE ON cliente
+FOR EACH ROW
+BEGIN
+	DELETE FROM agendamento WHERE idCliente=OLD.idCliente;
+END $$
+
+CREATE TRIGGER trg_cascadeFuncionario BEFORE DELETE ON funcionario
+FOR EACH ROW
+BEGIN
+	DELETE FROM agendamento WHERE cpf=OLD.cpf;
+END $$
+
+CREATE TRIGGER trg_cascadeServico BEFORE DELETE ON servico
+FOR EACH ROW
+BEGIN
+	DELETE FROM agendamento WHERE idServico=OLD.idServico;
+END $$
+
+CREATE PROCEDURE ValorPagar (IN idCliente INT)
+BEGIN
+	SELECT C.nome 'Cliente', SUM(S.preco) AS 'Valor a pagar (R$)' FROM Agendamento AS A, Cliente AS C, Servico AS S
+	WHERE A.idCliente=idCliente AND A.idCliente=C.idCliente AND A.idServico=S.idServico AND A.pago=0;
+END $$
+
+CREATE PROCEDURE LucroDia (IN data DATE)
+BEGIN
+SELECT SUM(S.preco) AS "Lucro do dia" FROM Agendamento AS A,
+Servico AS S
+WHERE A.idServico=S.idServico AND A.pago=1 AND A.data=data;
+END $$
+
+CREATE PROCEDURE LucroDiaFuncionario (IN data DATE, IN cpf char(11))
+BEGIN
+SELECT F.nome AS 'Barbeiro', SUM(S.preco) AS "Lucro obtido no dia" FROM
+Agendamento AS A, Servico AS S, Funcionario AS F
+WHERE A.idServico=S.idServico AND A.cpf=F.cpf AND A.pago=1 AND A.data=data AND
+A.cpf=cpf;
+END $$
+
+DELIMITER ;
+
+INSERT INTO Cliente(nome) VALUES
+('Karl Jablonski'),
+('Matti Karttunen'),
+('Tom B. Erichsen'),
+('Per Olsen'),
+('Finn Egan')
+;
+
+INSERT INTO Funcionario VALUES
+('192.168.642-55', 'William Afton'),
+('172.162.552-55', 'Michael Afton')
+;
+
+INSERT INTO Servico(nome, preco) VALUES
+('Corte', 30.00),
+('Barba', 20.00)
+;
+
+INSERT INTO Agendamento(data, hora, cpf, idCliente, idServico) VALUES
+(curdate(), '15:00', '192.168.642-55', 1, 1),
+(curdate(), '15:00', '172.162.552-55', 2, 1),
+(curdate(), '15:30', '192.168.642-55', 3, 2),
+(curdate(), '15:30', '172.162.552-55', 4, 2),
+(curdate(), '16:00', '192.168.642-55', 5, 1)
+;

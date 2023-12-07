@@ -1,6 +1,6 @@
 function CarregarTabela(){
     document.getElementById('tableServicos').innerHTML = '';
-    setTimeout(GerarTabela, 10); // Tempo de 10ms para não sobrecarregar o servidor
+    setTimeout(GerarTabela, 100); // Tempo de 100ms para não sobrecarregar o servidor
 }
 
 function  GerarTabela(){
@@ -17,13 +17,19 @@ function  GerarTabela(){
 
             for(var i=0; i<dados.length; i++){
                 var row = `<tr id="${i}">`;
+
+                dados[i]['descricao'] === null ? dados[i]['descricao']='' : false;
+
                 row += `
                     <td hidden>${dados[i]['idServico']}</td>
                     <td>${dados[i]['nome']}</td>
                     <td>${dados[i]['descricao']}</td>
                     <td>${dados[i]['preco']}</td>
-                    <td class="text-end"><button class="btn btn-outline-success" onclick="ColetaDadosLinha(${i})"><i class="bi bi-pencil-square"></i></td>
-                    <td class="text-end"><button class="btn btn-outline-danger" onclick="ExcluirTupla(${dados[i]['idServico']})"><i class="bi bi-trash"></i></td>
+
+                    <td class="text-center">
+                        <a role="button" class="acao-editar" onclick="ColetaDadosLinha(${i})"><i class="bi bi-pencil-square"></i></a>
+                        <a role="button" class="acao-excluir" onclick="ExcluirTupla(${dados[i]['idServico']})"><i class="bi bi-trash"></i></a>
+                    </td>
                 `
                 row += '</row>';
 
@@ -48,20 +54,14 @@ function ColetaDadosLinha(rowId){
         document.getElementById('editarDescricao').value = rowData[2];
         document.getElementById('editarPreco').value = rowData[3];
 
-        $('#nav-editar-tab').tab('show'); // Mostrar automaticamente na aba de Edição
+        $('#modalEditarServico').modal('show');
     }
 }
 
 function ExcluirTupla(chave){
-    $.ajax({
-        url: '../app/api/endpoints/POST_deleteservico.php',
-        type: 'POST',
-        data: {
-            idServico: chave
-        }
-    })
+    window.sessionStorage.setItem('chave', chave);
 
-    CarregarTabela();
+    $('#modalConfirmacao').modal('show');
 }
 
 $(document).ready(function(){
@@ -85,6 +85,10 @@ $('#cadastrar').on('submit', function(event){
         }
     })
 
+    $('#modalNovoServico').modal('hide');
+    $('#nome').val('');
+    $('#descricao').val('');
+    $('#preco').val('');
     CarregarTabela();
 })
 
@@ -107,7 +111,24 @@ $('#editar').on('submit', function(event){
         }
     })
 
+    $('#modalEditarServico').modal('hide');
     CarregarTabela();
+})
+
+$('#excluir').on('click', function(event){
+    event.preventDefault();
+    const chave = window.sessionStorage.getItem('chave');
+
+    $.ajax({
+        url: '../app/api/endpoints/POST_deleteservico.php',
+        type: 'POST',
+        data: {
+            idServico: chave
+        }
+    })
+
+    CarregarTabela();
+    $('#modalConfirmacao').modal('hide');
 })
 
 $("#filtroBusca").on("keyup", function () {
@@ -128,3 +149,9 @@ $("#filtroBusca").on("keyup", function () {
       $row.toggle(rowContainsValue);
     });
 });
+
+$('#novoServico').on('click', function(event){
+    event.preventDefault();
+
+    $('#modalNovoServico').modal('show');
+})

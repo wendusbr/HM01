@@ -9,6 +9,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
     <div class="row bg-primary text-light text-start" style="height: 22px;">
@@ -28,7 +29,7 @@
                   </li>
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      Cadastrar
+                        Gerenciar
                     </a>
                     <ul class="dropdown-menu">
                       <li><a class="dropdown-item" href="clientes.html">Cliente</a></li>
@@ -45,29 +46,29 @@
     <section>
         <div class="container mt-4">
             <div class="mb-4">
-                <h3>Gerenciar agendamentos</h3>
+                <h3><i class="bi bi-card-checklist"></i> Agendamentos</h3>
             </div>
             <div class="row mb-4">
                 <div class="card shadow">
                     <form id="cadastrar" class="p-4" type="submit">
                         <div class="mb-2">
-                            <label for="data" class="form-label">Data</label>
+                            <label for="data" class="form-label">Data:</label>
                             <input id="data" class="form-control" type="date" required>
                         </div>
                         <div class="mb-2">
-                            <label for="selectHoras" class="form-label">Hora</label>
+                            <label for="selectHoras" class="form-label">Hora:</label>
                             <select id="selectHoras" class="form-select"></select>
                         </div>
                         <div class="mb-2">
-                            <label for="selectFuncionarios" class="form-label">Funcionário</label>
+                            <label for="selectFuncionarios" class="form-label">Funcionário:</label>
                             <select id="selectFuncionarios" class="form-select"></select>
                         </div>
                         <div class="mb-2">
-                            <label for="selectClientes" class="form-label">Cliente</label>
+                            <label for="selectClientes" class="form-label">Cliente:</label>
                             <select id="selectClientes" class="form-select"></select>   
                         </div>
                         <div class="mb-4">
-                            <label for="selectServicos" class="form-label">Serviço</label>
+                            <label for="selectServicos" class="form-label">Serviço:</label>
                             <select id="selectServicos" class="form-select"></select>
                         </div>
                         <div class="text-end">
@@ -76,11 +77,19 @@
                     </form>
                 </div>
             </div>
-        
+            <div class="row mb-2" hidden>
+                <div class="col-xl-6 col-lg-6">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input id="filtroBusca" class="form-control" type="date" placeholder="Buscar...">
+                    </div>
+                </div>
+            </div>
+            <hr>
             <div class="row">
                 <div class="table-responsive">
-                    <table class="table table-responsive">
-                        <thead>
+                    <table class="table table-striped">
+                        <thead class="table-primary">
                             <th>Data</th>
                             <th>Hora</th>
                             <th>Barbeiro</th>
@@ -88,12 +97,12 @@
                             <th>Serviço</th>
                             <th>Realizado</th>
                             <th>Pago</th>
-                            <th></th>
+                            <th class="text-center">Ações</th>
                         </thead>
                         <tbody id="tableAgendamentos">
     
                         </tbody>
-                        <tfoot>
+                        <tfoot class="table-danger">
                             <th>Data</th>
                             <th>Hora</th>
                             <th>Barbeiro</th>
@@ -101,7 +110,7 @@
                             <th>Serviço</th>
                             <th>Realizado</th>
                             <th>Pago</th>
-                            <th></th>
+                            <th class="text-center">Ações</th>
                         </tfoot>
                     </table>
                 </div>
@@ -111,8 +120,62 @@
 
     <footer class="text-center">
         <hr>
-        <p>&copy; Wendell Bernardo</p>
+        <p>&copy; HM01</p>
     </footer>
+
+    <!-- Modal editar -->
+    <div class="modal fade" id="modalEditarAgendamento" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Editar agendamento</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form id="editar" type="submit">
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label for="editarData" class="form-label">Data:</label>
+                        <input id="editarData" class="form-control" type="date"value="2023-12-03" required disabled>
+                    </div>
+                    <div class="mb-2">
+                        <label for="editarHora" class="form-label">Hora:</label>
+                        <input id="editarHora" class="form-control" type="text" required disabled>
+                    </div>
+                    <div class="mb-2" hidden>
+                        <label for="editarCpf" class="form-label">CPF:</label>
+                        <input id="editarCpf" class="form-control" type="text" required disabled> 
+                    </div>
+                    <div class="mb-2">
+                        <label for="editarNomeCliente" class="form-label">Cliente:</label>
+                        <input id="editarNomeCliente" class="form-control" type="text" required disabled> 
+                    </div>
+                    <div class="mb-2">
+                        <label for="editarFuncionario" class="form-label">Funcionário:</label>
+                        <input id="editarFuncionario" class="form-control" type="text" required disabled>
+                    </div>
+                    <div class="mb-4">
+                        <label for="editarServico" class="form-label">Serviço:</label>
+                        <input id="editarServico" class="form-control" type="text" required disabled>
+                    </div>
+                    <div class="mb-4">
+                        <div class="form-check form-switch">
+                            <input id="status" class="form-check-input" type="checkbox" role="switch">
+                            <label for="status" class="form-check-label">Realizado</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input id="pago" class="form-check-input" type="checkbox" role="switch">
+                            <label for="pago"class="form-check-label">Pago</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="salvar" class="btn btn-success">Salvar</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

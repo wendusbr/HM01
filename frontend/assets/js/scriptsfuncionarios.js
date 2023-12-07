@@ -2,7 +2,7 @@ $("#cpf").mask("999.999.999-99");
 
 function CarregarTabela(){
     document.getElementById('tableFuncionarios').innerHTML = '';
-    setTimeout(GerarTabela, 10); // Tempo de 10ms para não sobrecarregar o servidor
+    setTimeout(GerarTabela, 100); // Tempo de 100ms para não sobrecarregar o servidor
 }
 
 function GerarTabela(){
@@ -22,8 +22,11 @@ function GerarTabela(){
                 row += `
                     <td>${dados[i]['nome']}</td>
                     <td>${dados[i]['cpf']}</td>
-                    <td class="text-end"><button class="btn btn-outline-success" onclick="ColetaDadosLinha(${i})"><i class="bi bi-pencil-square"></i></td>
-                    <td class="text-end"><button class="btn btn-outline-danger" onclick="ExcluirTupla(${dados[i]['cpf']})"><i class="bi bi-trash"></i></td>
+
+                    <td class="text-center">
+                        <a role="button" class="acao-editar" onclick="ColetaDadosLinha(${i})"><i class="bi bi-pencil-square"></i></a>
+                        <a role="button" class="acao-excluir" onclick="ExcluirTupla('${dados[i]['cpf']}')"><i class="bi bi-trash"></i></a>
+                    </td>
                 `;
                 row += '</tr>';
 
@@ -46,20 +49,14 @@ function ColetaDadosLinha(rowId){
         document.getElementById('editarCpf').value = rowData[1];
         document.getElementById('editarNome').value = rowData[0];
 
-        $('#nav-editar-tab').tab('show'); // Mostrar automaticamente na aba de Edição
+        $('#modalEditarFuncionario').modal('show');
     }
 }
 
 function ExcluirTupla(chave){
-    $.ajax({
-        url: '../app/api/endpoints/POST_deletefuncionario.php',
-        type: 'POST',
-        data: {
-            cpf: chave
-        }
-    })
+    window.sessionStorage.setItem('chave', chave);
 
-    CarregarTabela();
+    $('#modalConfirmacao').modal('show');
 }
 
 $(document).ready(function(){
@@ -81,6 +78,9 @@ $('#cadastrar').on('submit', function(event){
         }
     })
 
+    $('#modalNovoFuncionario').modal('hide');
+    $('#cpf').val('');
+    $('#nome').val('');
     CarregarTabela();
 })
 
@@ -99,7 +99,24 @@ $('#editar').on('submit', function(event){
         }
     })
 
+    $('#modalEditarFuncionario').modal('hide');
     CarregarTabela();
+})
+
+$('#excluir').on('click', function(event){
+    event.preventDefault();
+    const chave = window.sessionStorage.getItem('chave');
+
+    $.ajax({
+        url: '../app/api/endpoints/POST_deletefuncionario.php',
+        type: 'POST',
+        data: {
+            cpf: chave
+        }
+    })
+
+    CarregarTabela();
+    $('#modalConfirmacao').modal('hide');
 })
 
 $("#filtroBusca").on("keyup", function () {
@@ -120,3 +137,9 @@ $("#filtroBusca").on("keyup", function () {
       $row.toggle(rowContainsValue);
     });
 });
+
+$('#novoFuncionario').on('click', function(event){
+    event.preventDefault();
+
+    $('#modalNovoFuncionario').modal('show');
+})
