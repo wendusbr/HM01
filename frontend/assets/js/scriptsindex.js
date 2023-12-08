@@ -36,7 +36,7 @@ function MudaPago(rowId){
     const rowData = ColetaDadosLinha(rowId);
 
     const pago = document.getElementById('checkbox'+rowId).checked;
-    debugger
+    
     $.ajax({
         url: '../app/api/endpoints/POST_updateagendamento.php',
         type: 'POST',

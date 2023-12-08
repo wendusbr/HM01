@@ -165,6 +165,19 @@ function ColetaDadosLinha(rowId){
 }
 
 function ExcluirTupla(data, hora, cpf){
+    window.sessionStorage.setItem('data', data);
+    window.sessionStorage.setItem('hora', hora);
+    window.sessionStorage.setItem('cpf', cpf);
+
+    $('#modalConfirmacao').modal('show');
+}
+
+$('#excluir').on('click', function(event){
+    event.preventDefault();
+    const data = window.sessionStorage.getItem('data');
+    const hora = window.sessionStorage.getItem('hora');
+    const cpf = window.sessionStorage.getItem('cpf');
+
     $.ajax({
         url: '../app/api/endpoints/POST_deleteagendamento.php',
         type: 'POST',
@@ -176,7 +189,8 @@ function ExcluirTupla(data, hora, cpf){
     })
 
     CarregarTabela();
-}
+    $('#modalConfirmacao').modal('hide');
+})
 
 $(document).ready(function(){
     CarregarTabela();
